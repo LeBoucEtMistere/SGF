@@ -20,6 +20,7 @@
 *.tar
 *.zip
 *.xcodeproj
+*.plist
 
 # Logs and databases #
 ######################
@@ -40,4 +41,10 @@ Thumbs.db
 # Directories #
 ###############
 
-SGF/DerivedData/
+SGF/DerivedData/SGF/
+SGF/DerivedData/SGF/Build/
+SGF/DerivedData/SGF/Index/
+SGF/DerivedData/SGF/TextIndex/
+
+SGF.xcodeproj
+
