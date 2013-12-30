@@ -11,10 +11,13 @@
 
 #include "Logger.h"
 #include "Exception.h"
+
+
 #include <map>
 #include <utility>
 #include <string>
-#include <SFML/Graphics.hpp>
+
+
 
 
 
@@ -26,12 +29,12 @@ namespace sgf {
     template <class T>
     class ILoader
     {
-        public :
         
+    public :
+
         typedef std::shared_ptr<T> ptrT;
         using KeyType = std::string;
         using MapType = std::map<KeyType , ptrT>;
-
         
         ILoader(std::string const& loaderName) : mLoaderName(loaderName)
         {}
@@ -58,12 +61,6 @@ namespace sgf {
             throw sgf::FileException(UID ,"Unspecified getter");
 
         }
-        
-        
-        
-        
-        
-        
         
         
     protected:
@@ -117,67 +114,6 @@ namespace sgf {
     
     template <class T>
     typename ILoader<T>::MapType ILoader<T>::mRessources ;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // BASE LOADERS DEFINITIONS FOR SFML TYPES //
-    
-    class TextureLoader : public ILoader<sf::Texture>
-    {
-    public:
-        
-        typedef std::shared_ptr<sf::Texture> ptrTexture;
-        
-        TextureLoader(std::string const& loaderName): ILoader<sf::Texture>(loaderName)
-        {}
-        ~TextureLoader()
-        {
-            UnloadAllRessources();
-        }
-        
-        virtual void LoadRessource(KeyType const& key, std::string const& filename)
-        {
-            ptrTexture ressource (new sf::Texture);
-
-            if(!ressource->loadFromFile(filename))
-            {
-                throw sgf::FileException(filename,"Unable to Load the Texture from the given filepath");
-                return;
-            }
-            
-            this->add(key, ressource);
-        }
-        
-        virtual void UnloadRessource(KeyType const& UID)
-        {
-            return this->remove(UID);
-        }
-        
-        virtual void UnloadAllRessources()
-        {
-            return this->removeAll();
-        }
-        
-        virtual ptrTexture getRessource(KeyType const& UID)
-        {
-            return this->get(UID);
-        }
-        
-    };
     
 }
 

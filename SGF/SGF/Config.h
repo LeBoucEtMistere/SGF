@@ -9,8 +9,13 @@
 #ifndef SGF_Config_h
 #define SGF_Config_h
 
-#define SGF_LOGGER // general switch
-#define ENABLE_ONLY_IN_DEBUG //automatic switch for debug/release mode
+//////////////////////////////////////////////
+/////////////// LOGGER CONFIG ////////////////
+//////////////////////////////////////////////
+
+
+#define SGF_LOGGER                  // general switch
+#define ENABLE_ONLY_IN_DEBUG        // automatic switch for debug/release mode
 
 //#define ERR_TO_FILE
 //#define LOG_TO_FILE

@@ -11,10 +11,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <thread>
 
 #include "Logger.h"
 #include "Exception.h"
-#include "ContentManager.h"
+#include "StandardContentManager.h"
 #include "StateManager.h"
 
 namespace sgf {
@@ -58,6 +59,9 @@ protected :
     sf::RenderWindow mWindow;
     
     sgf::TextureLoader mTextureLoader;
+    sgf::SoundLoader mSoundLoader;
+    sgf::MusicLoader mMusicLoader;
+    sgf::FontLoader mFontLoader;
     
 };
     
