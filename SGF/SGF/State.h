@@ -10,5 +10,8 @@
 #define __SGF__State__
 
 #include <iostream>
+#include "Dispatcher.h"
+#include "System.h"
+#include "Entity.h"
 
 #endif /* defined(__SGF__State__) */

@@ -10,5 +10,6 @@
 #define __SGF__Entity__
 
 #include <iostream>
+#include "Component.h"
 
 #endif /* defined(__SGF__Entity__) */

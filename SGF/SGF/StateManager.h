@@ -10,5 +10,6 @@
 #define __SGF__StateManager__
 
 #include <iostream>
+#include "State.h"
 
 #endif /* defined(__SGF__StateManager__) */

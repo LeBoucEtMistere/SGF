@@ -6,4 +6,6 @@
 //  Copyright (c) 2013 DEPASSE Arthur. All rights reserved.
 //
 
-#include <stdio.h>
+#include "Logger.h"
+
+std::shared_ptr<sgf::Logger> sgf::Logger::mSingleton = nullptr;

@@ -8,11 +8,16 @@
 
 #include <iostream>
 
+
+
+#include "Game.h"
+
 int main(int argc, const char * argv[])
 {
 
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
+    sgf::Game newGame("My New Game", 450, 480);
+    newGame.exec();
+    
+    return EXIT_SUCCESS;
 }
 
