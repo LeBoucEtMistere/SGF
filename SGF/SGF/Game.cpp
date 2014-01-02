@@ -105,8 +105,7 @@ void sgf::Game::exec()
     music->stop();
 
     sound->play();
-    std::chrono::nanoseconds timer(sound->getBuffer()->getDuration().asMicroseconds()*1000);
-    std::this_thread::sleep_for(timer);
+    std::this_thread::sleep_for(sgf::SfTimeToStd(sound->getBuffer()->getDuration()));
 
 
 

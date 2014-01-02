@@ -10,6 +10,7 @@
 #define __SGF__Logger__
 
 #include "Config.h"
+#include "Utils.h"
 
 #include <iostream>
 #include <fstream>
@@ -50,9 +51,9 @@ namespace sgf
         #ifdef LOG_TO_FILE
             
             #ifdef LOG_FILE
-            _log_stream = new std::ofstream(ERR_FILE);
+            _log_stream = new std::ofstream(LOG_FILE);
             #else
-            _log_stream = new std::ofstream("err.txt");
+            _log_stream = new std::ofstream("log.txt");
             #endif
             
             _previous_clog = std::clog.rdbuf();
@@ -103,11 +104,22 @@ namespace sgf
         {
             if (os == OS::ERR)
             {
-                std::cerr << "[ERROR]" << msg;
+                #ifdef ERR_TO_FILE
+                    #ifdef LANGUAGE
+                std::cerr << sgf::dateToString(sgf::LANGUAGE).c_str();
+                    #endif
+                #endif
+                std::cerr << "[ERROR]" << msg << std::endl;
+            
             }
             else if (os == OS::LOG)
             {
-                std::clog << "[LOG]" << msg;
+                #ifdef LOG_TO_FILE
+                    #ifdef LANGUAGE
+                std::clog << sgf::dateToString(sgf::LANGUAGE).c_str();
+                    #endif                
+                #endif
+                std::clog << "[LOG]" << msg << std::endl;
             }
 
         }

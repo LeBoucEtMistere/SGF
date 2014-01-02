@@ -23,4 +23,6 @@
 #define LOG_FILE "log.txt"
 #define ERR_FILE "err.txt"
 
+#define LANGUAGE FRENCH
+
 #endif
