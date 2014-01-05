@@ -30,7 +30,8 @@ namespace sgf
         UNKNOW = 0,
         STANDARD = 1,
         LOADER = 2,
-        FILE = 3
+        FILE = 3,
+        MISSING_FUNCTION_DEF = 4
     };
     
 
@@ -115,6 +116,9 @@ namespace sgf
                     break;
                 case ExceptionType::FILE:
                     typeStr  = "file loading/unloading";
+                    break;
+                case ExceptionType::MISSING_FUNCTION_DEF:
+                    typeStr  = "missing required function definition";
                     break;
                     
             }

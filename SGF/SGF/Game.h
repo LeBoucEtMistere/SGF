@@ -10,60 +10,47 @@
 #define __SGF__Game__
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <thread>
-
 #include "Logger.h"
 #include "Exception.h"
+#include "Utils.h"
 #include "StandardContentManager.h"
 #include "StateManager.h"
 
 namespace sgf {
 
-class Game
-{
-public :
+    class Game
+    {
+        public :
     
-    // CTOR AND DTOR //
+        // CTOR AND DTOR //
+        
+        Game(const std::string& title, int width, int height, unsigned int style = sf::Style::Default);
     
-    Game(const std::string& title, int width, int height, unsigned int style = sf::Style::Default);
+        virtual ~Game();
     
-    virtual ~Game();
+        // MAIN METHOD //
     
-    // MAIN METHOD //
+        void exec();
     
-    void exec();
+        // GETTERS //
     
-    // GETTERS //
-    
-    sf::RenderWindow const& getWindow() const {return mWindow ;}
+        sf::RenderWindow const& getWindow() const {return mWindow ;}
 
     
-protected :
+        protected :
     
-    virtual void init()
-    {
-        throw sgf::Exception("No Init Function def for your Game", sgf::ExceptionLevel::FATAL);
-    }
+        virtual void init() = 0;   //Will be called at the beginning of exec()
     
-    virtual void load()
-    {
-        throw sgf::Exception("No Load Function def for your Game", sgf::ExceptionLevel::FATAL);
-    }
+        virtual void load() = 0;   //Will be called at the beginning of exec() after init()
     
-    virtual void unload()
-    {
-        throw sgf::Exception("No Unload Function def for your Game", sgf::ExceptionLevel::FATAL);
-    }
+        virtual void unload() = 0; //Will be called while exiting the main loop in exec()
+
     
-    sf::RenderWindow mWindow;
+        sf::RenderWindow mWindow;
     
-    sgf::TextureLoader mTextureLoader;
-    sgf::SoundLoader mSoundLoader;
-    sgf::MusicLoader mMusicLoader;
-    sgf::FontLoader mFontLoader;
+        sgf::StateManager mStateManager;
     
-};
+    };
     
 }
 

@@ -10,12 +10,12 @@
 
 
 
-#include "Game.h"
+#include "MyGame.h"
 
 int main(int argc, const char * argv[])
 {
 
-    sgf::Game newGame("My New Game", 450, 480);
+    MyGame newGame("My New Game", 450, 480);
     newGame.exec();
     
     return EXIT_SUCCESS;

@@ -126,11 +126,8 @@ namespace sgf
         static std::shared_ptr<Logger> getLogger()
         {
             if (mSingleton == nullptr)
-            {
                 mSingleton.reset(new Logger);
-                return mSingleton;
-            }
-            else return mSingleton;
+            return mSingleton;
         }
         
     private:
