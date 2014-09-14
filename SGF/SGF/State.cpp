@@ -2,9 +2,8 @@
 //  State.cpp
 //  SGF
 //
-//  Created by DEPASSE Arthur on 28/12/2013.
-//  Copyright (c) 2013 DEPASSE Arthur. All rights reserved.
+//  Created by DEPASSE Arthur on 25/07/2014.
+//  Copyright (c) 2014 DEPASSE Arthur. All rights reserved.
 //
 
 #include "State.h"
-
