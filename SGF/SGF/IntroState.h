@@ -10,13 +10,30 @@
 #define __SGF__IntroState__
 
 #include "State.h"
+#include "GameState.h"
+#include "StandardRessourceLoader.h"
 
-class IntroState: public sgf::State
+
+#include "Logger.h"
+
+#include "Gui.h"
+
+
+#include "ECS.h"
+
+#include "MyComponents.h"
+#include "MovementSystem.h"
+
+
+#include <SFML/Graphics.hpp>
+
+class MyGame;
+
+class IntroState: public sgf::IState
 {
 public:
     
-    friend class sgf::Singleton<IntroState>;
-    
+    IntroState(sgf::StateManager& stateMng, int width, int height);
     virtual ~IntroState(){}
     
     virtual void Init();
@@ -25,15 +42,33 @@ public:
     virtual void Pause();
     virtual void Resume();
     
-    virtual void HandleEvents(sgf::Game *);
-    virtual void Update(sgf::Game *);
-    virtual void Draw(sgf::Game *);
+    virtual void HandleEvents(sgf::Game *,sf::RenderWindow& window, sf::Event const& evt);
+    virtual void Update(sgf::Game* game, sf::Time const& elapsed);
+    virtual void Draw(sgf::Game *,sf::RenderWindow& window);
     
 protected:
     
-    IntroState(sgf::StateManager& stateMng): sgf::State(stateMng){}
-    IntroState(const IntroState& rhs): sgf::State(rhs){}
-    void operator=(const IntroState& rhs){}
+    IntroState(const IntroState& rhs)=delete;
+    void operator=(const IntroState& rhs)=delete;
+    
+private:
+    
+    sgf::TextureLoader _texLoader;
+    sgf::SpriteLoader _spriteLoader;
+
+    
+    sgf::MusicLoader _musicLoader;
+    sf::Music* music;
+    
+    sgf::gui::Button jouer;
+    sgf::gui::Button quitter;
+    sgf::gui::Button reglages;
+    
+    sgf::ECSWorld world;
+    
+    
+    int _width;
+    int _height;
     
 };
 

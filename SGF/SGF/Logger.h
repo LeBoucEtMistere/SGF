@@ -125,9 +125,9 @@ namespace sgf
         }
         static std::shared_ptr<Logger> getLogger()
         {
-            if (mSingleton == nullptr)
-                mSingleton.reset(new Logger);
-            return mSingleton;
+            if (_singleton == nullptr)
+                _singleton.reset(new Logger);
+            return _singleton;
         }
         
     private:
@@ -137,7 +137,7 @@ namespace sgf
         std::streambuf* _previous_cerr;
         std::streambuf* _previous_clog;
 
-        static std::shared_ptr<Logger> mSingleton;
+        static std::shared_ptr<Logger> _singleton;
     
     };
         

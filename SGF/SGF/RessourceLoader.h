@@ -11,9 +11,10 @@
 
 #include "Logger.h"
 #include "Exception.h"
+#include "Hash.h"
 
 
-#include <map>
+#include <unordered_map>
 #include <utility>
 #include <string>
 
@@ -27,19 +28,21 @@ namespace sgf {
     // LOADER INTERFACE //
     
     template <class T>
-    class ILoader
+    class IRessourceLoader
     {
         
     public :
 
-        typedef std::shared_ptr<T> ptrT;
+        typedef std::unique_ptr<T> ptrT;
+        typedef T& refT;
         using KeyType = std::string;
-        using MapType = std::map<KeyType , ptrT>;
+        using HashType = uint64_t;
+        using MapType = std::unordered_map<HashType , ptrT>;
         
-        ILoader(std::string const& loaderName) : mLoaderName(loaderName)
+        IRessourceLoader(std::string const& loaderName) : _loaderName(loaderName)
         {}
         
-        virtual ~ILoader() = 0;
+        virtual ~IRessourceLoader() = 0;
         
         virtual void LoadRessource(KeyType const& key, std::string const& filename)
         {
@@ -65,55 +68,60 @@ namespace sgf {
         
     protected:
         
-        ptrT get(KeyType const& UID)
+        refT get(KeyType const& UID)
         {
-            if(mRessources.find(UID) != mRessources.end())
+            HashType hash = Hash(UID.c_str(), UID.size());
+            
+            if(_ressources.find(hash) != _ressources.end())
             {
-                return mRessources[UID];
+                return *(_ressources[hash]);
             }
-            throw sgf::LoaderException(mLoaderName,UID,"Trying to get a non-initialized ressource",sgf::ExceptionLevel::WARNING);
-            return nullptr;
+            throw sgf::LoaderException(_loaderName,UID,"Trying to get a non-initialized ressource",sgf::ExceptionLevel::WARNING);
+            
         }
         
-        void add(KeyType const& key, ptrT ptr)
+        void add(KeyType const& key, ptrT&& ptr)
         {
-            
-            if(true)//la ressource est déjà dans la map  /// TODO ///
+            HashType hash = Hash(key.c_str(), key.size());
+
+            if(_ressources.find(hash) == _ressources.end())
             {
-                if (!mRessources.emplace(std::make_pair(key, ptr)).second)
-                    throw sgf::LoaderException(mLoaderName,key,"Cannot emplace the given Ressource",sgf::ExceptionLevel::WARNING);
+                if (!_ressources.emplace(std::make_pair(hash, ptrT(std::move(ptr)))).second)
+                    throw sgf::LoaderException(_loaderName,key,"Cannot emplace the given Ressource",sgf::ExceptionLevel::WARNING);
             }
-            else throw sgf::LoaderException(mLoaderName,key,"The given ressource is already present in the loader",sgf::ExceptionLevel::WARNING);
+            else throw sgf::LoaderException(_loaderName,key,"The given ressource is already present in the loader",sgf::ExceptionLevel::WARNING);
 
         }
         
         void remove(KeyType const& UID)
         {
-            if(mRessources.find(UID) != mRessources.end())
+            HashType hash = Hash(UID.c_str(), UID.size());
+
+            if(_ressources.find(hash) != _ressources.end())
             {
-                mRessources.erase(UID);
+                _ressources.erase(hash);
             }
             else
             {
-                throw sgf::LoaderException(mLoaderName,UID,"Trying to delete a non-initialized ressource",sgf::ExceptionLevel::WARNING);
+                throw sgf::LoaderException(_loaderName,UID,"Trying to delete a non-initialized ressource",sgf::ExceptionLevel::WARNING);
             }
         }
         
         void removeAll()
         {
-            mRessources.clear();
+            _ressources.clear();
 
         }
         
-        static MapType mRessources;
-        std::string mLoaderName;
+        static MapType _ressources;
+        std::string _loaderName;
         
     };
     template <class T>
-    inline ILoader<T>::~ILoader<T>() { }
+    inline IRessourceLoader<T>::~IRessourceLoader<T>() { }
     
     template <class T>
-    typename ILoader<T>::MapType ILoader<T>::mRessources ;
+    typename IRessourceLoader<T>::MapType IRessourceLoader<T>::_ressources ;
     
 }
 

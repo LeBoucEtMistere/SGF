@@ -9,6 +9,10 @@
 #ifndef SGF_ECS_h
 #define SGF_ECS_h
 
+#include "Component.h"
+#include "Entity.h"
+#include "System.h"
+#include "ECSWorld.h"
 
 
 #endif

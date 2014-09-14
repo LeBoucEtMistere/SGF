@@ -9,7 +9,7 @@
 #include "Game.h"
 
 
-sgf::Game::Game(const std::string& title, int width, int height, unsigned int style) : mWindow(sf::VideoMode(width,height),title, style), mStateManager()
+sgf::Game::Game(const std::string& title, int width, int height, unsigned int style) : _window(sf::VideoMode(width,height),title, style), _stateManager()
 {
 }
 
@@ -17,30 +17,31 @@ sgf::Game::~Game()
 {
 }
 
-// MAIN METHOD //
-
 void sgf::Game::exec()
 {
     init();
     
+    _stateManager.Init();
+    
     load();
     
-    while (mWindow.isOpen())
+    sf::Clock clock;
+    
+    while (_window.isOpen())
     {
         sf::Event event;
-        while (mWindow.pollEvent(event))
+        while (_window.pollEvent(event))
         {
-            mStateManager.HandleEvents(this);
-            
+            _stateManager.HandleEvents(this,_window, event);
         }
         
-        mStateManager.Update(this);
+        _stateManager.Update(this, clock.restart());
         
-        mWindow.clear();
+        _window.clear();
         
-        mStateManager.Draw(this);
+        _stateManager.Draw(this, _window);
         
-        mWindow.display();
+        _window.display();
         
     }
     

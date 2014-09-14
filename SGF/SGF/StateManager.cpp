@@ -8,7 +8,7 @@
 
 #include "StateManager.h"
 
-sgf::StateManager::StateManager(): m_running(true), m_currentState(), m_states()
+sgf::StateManager::StateManager(): _states()
 {
     
 }
@@ -17,65 +17,74 @@ sgf::StateManager::~StateManager()
     
 }
 
-
-
 void sgf::StateManager::Init()
 {
-    for(State::StatePtr e : m_states)
-    {
-        e->Init();
-    }
+
 }
+
 void sgf::StateManager::Cleanup()
 {
-    auto it = m_states.begin();
-    for(State::StatePtr e : m_states)
-    {
-        e->Cleanup();
-        m_states.erase(it);
-        it++;
-    }
+
 }
 
-
-void sgf::StateManager::PushState(sgf::State::StatePtr state)
+void sgf::StateManager::PushState(StatePtr&& state)
 {
-    m_currentState->Pause();
-    m_states.push_front(state);
-    m_currentState = m_states.front();
-    m_currentState->Init();
+    if (!_states.empty())
+    {
+        currentState()->Pause();
+    }
+    _states.push(StatePtr(std::move(state)));
+    currentState()->Init();
 }
+
 void sgf::StateManager::PopState()
 {
-    m_currentState->Cleanup();
-    m_states.pop_front();
-    m_currentState = m_states.front();
-    m_currentState->Resume();
+    if (!_states.empty())
+    {
+        currentState()->Cleanup();
+        _states.pop();
+        if (!_states.empty())
+        {
+            currentState()->Resume();
+        }
+    }
+
 }
 
-
-
-void sgf::StateManager::HandleEvents(sgf::Game* game)
+void sgf::StateManager::PopAndPush(StatePtr&& state)
 {
-    m_currentState->HandleEvents(std::forward<sgf::Game*>(game));
+    PopState();
+    PushState(std::forward<StatePtr&&>(state));
 }
-void sgf::StateManager::Update(sgf::Game* game)
+
+void sgf::StateManager::HandleEvents(sgf::Game* game, sf::RenderWindow& window, sf::Event const& evt)
 {
-    m_currentState->Update(std::forward<sgf::Game*>(game));
-
+    currentState()->HandleEvents(std::forward<sgf::Game*>(game), std::forward<sf::RenderWindow&>(window), std::forward<sf::Event const&>(evt));
 }
-void sgf::StateManager::Draw(sgf::Game* game)
+
+void sgf::StateManager::Update(sgf::Game* game, sf::Time const& elapsed)
 {
-    m_currentState->Draw(std::forward<sgf::Game*>(game));
-
+    currentState()->Update(std::forward<sgf::Game*>(game), std::forward<sf::Time const&>(elapsed));
 }
 
-
-
-
-////// DEFINITION OF A FUNCTION OF THE STATE CLASS //////////
-
-void sgf::State::ChangeState(sgf::State::StatePtr state)
+void sgf::StateManager::Draw(sgf::Game* game, sf::RenderWindow& window)
 {
-    mStateMng.PushState(state);
+    currentState()->Draw(std::forward<sgf::Game*>(game), std::forward<sf::RenderWindow&>(window));
 }
+
+std::unique_ptr<sgf::IState>& sgf::StateManager::currentState()
+{
+    if (!_states.empty()) return _states.top();
+    
+    else throw sgf::Exception("No State in the StateStack");
+}
+
+
+
+
+
+
+
+
+
+

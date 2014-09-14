@@ -13,42 +13,36 @@
 #include "Logger.h"
 #include "Exception.h"
 #include "Utils.h"
-#include "StandardContentManager.h"
+#include "StandardRessourceLoader.h"
 #include "StateManager.h"
 
 namespace sgf {
 
     class Game
     {
-        public :
-    
-        // CTOR AND DTOR //
+        
+    public :
         
         Game(const std::string& title, int width, int height, unsigned int style = sf::Style::Default);
     
         virtual ~Game();
     
-        // MAIN METHOD //
-    
         void exec();
     
-        // GETTERS //
+        sf::RenderWindow& getWindow();
     
-        sf::RenderWindow const& getWindow() const {return mWindow ;}
-
-    
-        protected :
+    protected :
     
         virtual void init() = 0;   //Will be called at the beginning of exec()
     
         virtual void load() = 0;   //Will be called at the beginning of exec() after init()
     
-        virtual void unload() = 0; //Will be called while exiting the main loop in exec()
+        virtual void unload() = 0; //Will be called after leaving the main loop in exec()
 
     
-        sf::RenderWindow mWindow;
+        sf::RenderWindow _window;
     
-        sgf::StateManager mStateManager;
+        sgf::StateManager _stateManager;
     
     };
     

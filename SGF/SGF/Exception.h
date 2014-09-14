@@ -31,7 +31,10 @@ namespace sgf
         STANDARD = 1,
         LOADER = 2,
         FILE = 3,
-        MISSING_FUNCTION_DEF = 4
+        MISSING_FUNCTION_DEF = 4,
+        ENTITY_ACCESS_INVALID_COMPONENT = 5,
+        ALREADY_EXISTING_ID = 6,
+        SYSTEM_ACCESS_INVALID_ENTITY = 7
     };
     
 
@@ -45,12 +48,12 @@ namespace sgf
         
         Exception(std::string const& info="No more informations.",
                   sgf::ExceptionLevel level= ExceptionLevel::WARNING,
-                  sgf::ExceptionType type = ExceptionType::UNKNOW)throw() : mLevel(level), mType(type), mMsg("")
+                  sgf::ExceptionType type = ExceptionType::UNKNOW)throw() : _level(level), _type(type), _msg("")
         {
-            std::string levelString = lvlToString(mLevel);
-            std::string typeString = typeToString(mType);
+            std::string levelString = lvlToString(_level);
+            std::string typeString = typeToString(_type);
             
-            mMsg = levelString + " : An exception occured of " + typeString + " type. " + info + "\r";
+            _msg = levelString + " : An exception occured of \"" + typeString + "\" type. " + info + "\r";
             
         }
         
@@ -58,16 +61,16 @@ namespace sgf
         
         virtual const char* what() const throw()
         {
-            return mMsg.c_str();
+            return _msg.c_str();
         }
         
         ExceptionLevel const& getLevel() const throw()
         {
-            return mLevel;
+            return _level;
         }
         ExceptionType const& getType() const throw()
         {
-            return mType;
+            return _type;
         }
         
         // DTOR //
@@ -120,6 +123,15 @@ namespace sgf
                 case ExceptionType::MISSING_FUNCTION_DEF:
                     typeStr  = "missing required function definition";
                     break;
+                case ExceptionType::ENTITY_ACCESS_INVALID_COMPONENT:
+                    typeStr  = "entity accessed an invalid component";
+                    break;
+                case ExceptionType::ALREADY_EXISTING_ID:
+                    typeStr  = "already existing ID";
+                    break;
+                case ExceptionType::SYSTEM_ACCESS_INVALID_ENTITY:
+                    typeStr  = "system accessed an invalid entity";
+                    break;
                     
             }
             return typeStr;
@@ -127,9 +139,9 @@ namespace sgf
 
 
         
-        sgf::ExceptionLevel mLevel;
-        sgf::ExceptionType mType;
-        std::string mMsg;
+        sgf::ExceptionLevel _level;
+        sgf::ExceptionType _type;
+        std::string _msg;
 
     
     };
@@ -150,15 +162,15 @@ namespace sgf
                         sgf::ExceptionLevel level=ExceptionLevel::WARNING)throw()
         : sgf::Exception(info, level, ExceptionType::LOADER), mLoaderName(loaderName), mRessourceID(ressourceID)
         {
-            std::string levelString = lvlToString(mLevel);
-            std::string typeString = typeToString(mType);
+            std::string levelString = lvlToString(_level);
+            std::string typeString = typeToString(_type);
             
-            mMsg = levelString + " : An exception occured of " + typeString + " type in loader : \"" + loaderName + "\" with the following ressource ID : \"" + ressourceID + "\".\r" + info + "\r";
+            _msg = levelString + " : An exception occured of \"" + typeString + "\" type in loader : \"" + loaderName + "\" with the following ressource ID : \"" + ressourceID + "\".\r" + info + "\r";
         }
         
         virtual const char* what() const throw()
         {
-            return mMsg.c_str();
+            return _msg.c_str();
         }
         
     protected:
@@ -179,14 +191,14 @@ namespace sgf
                       sgf::ExceptionLevel level = ExceptionLevel::WARNING)throw()
         : sgf::Exception(info, level, ExceptionType::FILE), mFilename(filepath)
         {
-            std::string levelString = lvlToString(mLevel);
-            std::string typeString = typeToString(mType);
+            std::string levelString = lvlToString(_level);
+            std::string typeString = typeToString(_type);
             
-            mMsg = levelString + " : An exception occured of " + typeString + " type while loading/unloading the file : \"" + filepath + "\".\r" + info + "\r";
+            _msg = levelString + " : An exception occured of \"" + typeString + "\" type while loading/unloading the file : \"" + filepath + "\".\r" + info + "\r";
         }
         virtual const char* what() const throw()
         {
-            return mMsg.c_str();
+            return _msg.c_str();
         }
         
     protected:
@@ -194,6 +206,57 @@ namespace sgf
         
     };
     
+    /////////////////////////////////////////////
+    
+    class EntityException : public sgf::Exception
+    {
+    public:
+        EntityException(std::string const& entityName,
+                      sgf::ExceptionType const& type,
+                      std::string const& info="No more informations.",
+                      sgf::ExceptionLevel level = ExceptionLevel::WARNING)throw()
+        : sgf::Exception(info, level, type), _entityName(entityName)
+        {
+            std::string levelString = lvlToString(_level);
+            std::string typeString = typeToString(_type);
+            
+            _msg = levelString + " : An exception occured of \"" + typeString + "\" type while using the following entity : \"" + _entityName + "\".\r" + info + "\r";
+        }
+        virtual const char* what() const throw()
+        {
+            return _msg.c_str();
+        }
+        
+    protected:
+        std::string _entityName;
+        
+    };
+    
+    /////////////////////////////////////////////
+    
+    class SystemException : public sgf::Exception
+    {
+    public:
+        SystemException(std::string const& systemName,
+                        sgf::ExceptionType const& type,
+                        std::string const& info="No more informations.",
+                        sgf::ExceptionLevel level = ExceptionLevel::WARNING)throw()
+        : sgf::Exception(info, level, type), _systemName(systemName)
+        {
+            std::string levelString = lvlToString(_level);
+            std::string typeString = typeToString(_type);
+            
+            _msg = levelString + " : An exception occured of \"" + typeString + "\" type while using the following entity : \"" + _systemName + "\".\r" + info + "\r";
+        }
+        virtual const char* what() const throw()
+        {
+            return _msg.c_str();
+        }
+        
+    protected:
+        std::string _systemName;
+        
+    };
 }
 
 

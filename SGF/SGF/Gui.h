@@ -9,6 +9,6 @@
 #ifndef SGF_GUI_h
 #define SGF_GUI_h
 
-
+#include "Button.h"
 
 #endif

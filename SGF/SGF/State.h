@@ -11,11 +11,9 @@
 
 #include <iostream>
 
-#include "Dispatcher.h"
-#include "System.h"
-#include "Entity.h"
+#include <SFML/Graphics.hpp>
 
-#include "Singleton.h"
+
 
 namespace sgf
 {
@@ -23,15 +21,15 @@ namespace sgf
     class Game;
     class StateManager;
 
-    class State
+    class IState
     {
     public:
         
-        virtual ~State(){}
+        IState(StateManager& stateMng): _stateMng(stateMng){}
+        IState(const IState& rhs) = delete;
+        void operator=(const IState& rhs) = delete;
         
-        typedef std::shared_ptr<sgf::State> StatePtr;
-        
-        friend class sgf::Singleton<State>;
+        virtual ~IState(){}
     
         virtual void Init() = 0;
         virtual void Cleanup() = 0;
@@ -39,19 +37,16 @@ namespace sgf
         virtual void Pause() = 0;
         virtual void Resume() = 0;
     
-        virtual void HandleEvents(sgf::Game *) = 0;
-        virtual void Update(sgf::Game *) = 0;
-        virtual void Draw(sgf::Game *) = 0;
+        virtual void HandleEvents(sgf::Game *,sf::RenderWindow& window, sf::Event const& evt) = 0;
+        virtual void Update(sgf::Game* game, sf::Time const& elapsed) = 0;
+        virtual void Draw(sgf::Game *,sf::RenderWindow& window) = 0;
     
     protected:
         
-        State(StateManager& stateMng): mStateMng(stateMng){}
-        State(const State& rhs): mStateMng(rhs.mStateMng){}
-        void operator=(const State& rhs){}
-
-        
-        void ChangeState(StatePtr state);  // DEFINED IN STATEMANAGER.CPP //
-        StateManager& mStateMng;
+        void PushState(std::unique_ptr<sgf::IState>&& state);    //DEFINED IN STATEMANAGER.CPP
+        void ReplaceState(std::unique_ptr<sgf::IState>&& state); //DEFINED IN STATEMANAGER.CPP
+        void PopState();                                         //DEFINED IN STATEMANAGER.CPP
+        StateManager& _stateMng;
 
     
     };

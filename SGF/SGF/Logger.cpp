@@ -8,4 +8,4 @@
 
 #include "Logger.h"
 
-std::shared_ptr<sgf::Logger> sgf::Logger::mSingleton = nullptr;
+std::shared_ptr<sgf::Logger> sgf::Logger::_singleton = nullptr;

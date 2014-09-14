@@ -23,6 +23,8 @@
 #define LOG_FILE "log.txt"
 #define ERR_FILE "err.txt"
 
+#define SGF_HASHTYPE_FNV
+
 #define LANGUAGE FRENCH
 
 #endif
