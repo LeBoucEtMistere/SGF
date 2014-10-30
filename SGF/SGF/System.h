@@ -13,6 +13,7 @@
 #include <utility>
 #include <typeindex>
 #include <vector>
+#include "Logger.h"
 #include "Hash.h"
 #include "ECSWorld.h"
 #include "Entity.h"
@@ -22,6 +23,43 @@
 namespace sgf
 {
     class ECSWorld;
+    
+    class ECSIWorld
+    {
+        
+    public:
+        
+        ECSIWorld(ECSWorld& world) : _world(world)
+        {}
+        
+        ECSIWorld(const ECSIWorld& rhs) = delete;
+        ECSIWorld(ECSIWorld&& rhs) = delete;
+        ECSIWorld& operator=(const ECSIWorld&) = delete;
+        ECSIWorld& operator=(ECSIWorld&&) = delete;
+        
+        typedef unsigned int indexType ;
+        
+        void registerEntity(std::unique_ptr<sgf::Entity>& entity);
+        std::size_t getEntityCount() const;
+        
+        void removeEntity(indexType const& ID);
+        void removeAllEntities();
+        void reactiveEntity(indexType const& ID);
+        void unactiveEntity(indexType const& ID);
+        bool isActivated(indexType const& ID) const;
+    private:
+        ECSWorld& _world;
+        
+        
+    };
+    
+
+    
+    
+    
+    
+    
+    
     class EntityWrapper;
     
     class ISystem
@@ -33,7 +71,7 @@ namespace sgf
         virtual ~ISystem() = default;
         virtual void run() = 0;
     protected:
-        sgf::ECSWorld& _world;
+        sgf::ECSIWorld _world;
     };
     
     
@@ -92,6 +130,7 @@ namespace sgf
         {
             for (auto &i : _watchedEntity)
             {
+                LOG("da");
                 EntityWrapper wrapper(this, i.second);
                 Policy::computeEntity(wrapper);
             }
@@ -159,6 +198,34 @@ namespace sgf
     
     template<class Policy, class... Components>
     std::vector<std::type_index> System<Policy,Components...>::_typeWatched = {(typeid(Components))...};
+    
+    template <class Policy, class... Components>
+    void sgf::System<Policy,Components...>::deleteEntity(sgf::Entity &entity)
+    {
+        unregisterEntity(entity);
+        _world.removeEntity(entity.getId());
+    }
+    template <class Policy, class... Components>
+    void sgf::System<Policy,Components...>::deleteAllEntities()
+    {
+        unregisterAllEntites();
+        _world.removeAllEntities();
+    }
+    template <class Policy, class... Components>
+    void sgf::System<Policy,Components...>::reactiveEntity(sgf::Entity &entity)
+    {
+        _world.reactiveEntity(entity.getId());
+    }
+    template <class Policy, class... Components>
+    void sgf::System<Policy,Components...>::unactiveEntity(sgf::Entity &entity)
+    {
+        _world.unactiveEntity(entity.getId());
+    }
+    template <class Policy, class... Components>
+    bool sgf::System<Policy,Components...>::isActivated(sgf::Entity &entity) const
+    {
+        return _world.isActivated(entity.getId());
+    }
     
     
 

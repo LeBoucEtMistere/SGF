@@ -57,8 +57,8 @@ struct MovementPolicy
     static void computeEntity(sgf::System<MovementPolicy, PositionComponent>::EntityWrapper& wrapper)
     {
         auto comp = wrapper->getComponent<PositionComponent>("pos");
-        comp.setData(3.0,4.6);
-        if (wrapper.isActivated()) LOG("blob");
+        comp.setData(comp.getData().x+1,comp.getData().y+1);
+        LOG("blob");
     }
 };
 

@@ -17,12 +17,14 @@
 namespace sgf
 {
     class ISystem;
+    class ECSIWorld;
     
     class ECSWorld
     {
     public:
         
         friend class ISystem;
+        friend class ECSIWorld;
         
         typedef unsigned int indexType ;
         
@@ -72,21 +74,7 @@ namespace sgf
         void removeAllEntities();
         void reactiveEntity(indexType const& ID);
         void unactiveEntity(indexType const& ID);
-        bool isActivated(indexType const& ID) const
-        {
-            auto pos =_activeEntities.find(ID);
-            if(pos != _activeEntities.end())
-            {
-                return true;
-            }
-            auto pos2 = _inactiveEntities.find(ID);
-            if (pos2 != _inactiveEntities.end())
-            {
-                return false;
-            }
-            throw sgf::Exception("Trying to access a non existing Entity");
-            
-        }
+        bool isActivated(indexType const& ID) const;
         
         
     private:
@@ -139,6 +127,8 @@ namespace sgf
         else return false;
 
     }
+    
+
     
 
 }

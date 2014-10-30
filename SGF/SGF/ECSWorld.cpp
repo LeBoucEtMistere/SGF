@@ -30,6 +30,7 @@ void sgf::ECSWorld::runSystems()
     for (auto &i : _systems)
     {
         i.second->run();
+        LOG("dah")
     }
 }
 
@@ -111,7 +112,7 @@ void sgf::ECSWorld::unactiveEntity(indexType const& ID)
     _activeEntities.erase(pos);
  
 }
-/*bool sgf::ECSWorld::isActivated(indexType const& ID) const
+bool sgf::ECSWorld::isActivated(indexType const& ID) const
 {
     auto pos =_activeEntities.find(ID);
     if(pos != _activeEntities.end())
@@ -125,7 +126,7 @@ void sgf::ECSWorld::unactiveEntity(indexType const& ID)
     }
     throw sgf::Exception("Trying to access a non existing Entity");
 
-}*/
+}
 
 
 

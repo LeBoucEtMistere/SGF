@@ -9,32 +9,36 @@
 #include "System.h"
 #include "ECSWorld.h"
 
-// Systems methods defs
-
-template <class Policy, class... Components>
-void sgf::System<Policy,Components...>::deleteEntity(sgf::Entity &entity)
+void sgf::ECSIWorld::registerEntity(std::unique_ptr<sgf::Entity>& entity)
 {
-    unregisterEntity(entity);
-    _world.removeEntity(entity.getId());
+    _world.registerEntity(entity);
 }
-template <class Policy, class... Components>
-void sgf::System<Policy,Components...>::deleteAllEntities()
+std::size_t sgf::ECSIWorld::getEntityCount() const
 {
-    unregisterAllEntites();
+    return _world.getEntityCount();
+}
+void sgf::ECSIWorld::removeEntity(indexType const& ID)
+{
+    _world.removeEntity(ID);
+}
+void sgf::ECSIWorld::removeAllEntities()
+{
     _world.removeAllEntities();
 }
-template <class Policy, class... Components>
-void sgf::System<Policy,Components...>::reactiveEntity(sgf::Entity &entity)
+void sgf::ECSIWorld::reactiveEntity(indexType const& ID)
 {
-    _world.reactiveEntity(entity.getId());
+    _world.reactiveEntity(ID);
 }
-template <class Policy, class... Components>
-void sgf::System<Policy,Components...>::unactiveEntity(sgf::Entity &entity)
+void sgf::ECSIWorld::unactiveEntity(indexType const& ID)
 {
-    _world.unactiveEntity(entity.getId());
+    _world.unactiveEntity(ID);
 }
-template <class Policy, class... Components>
-bool sgf::System<Policy,Components...>::isActivated(sgf::Entity &entity) const
+bool sgf::ECSIWorld::isActivated(indexType const& ID) const
 {
-    _world.isActivated(entity.getId());
+    return _world.isActivated(ID);
 }
+
+
+
+
+
