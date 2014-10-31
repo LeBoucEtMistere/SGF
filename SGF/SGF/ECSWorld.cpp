@@ -8,7 +8,7 @@
 
 #include "ECSWorld.h"
 
-sgf::ECSWorld::ECSWorld(): _activeEntities(), _inactiveEntities(), _entityCount(0), _systems(), _systemCount(0)
+sgf::ECSWorld::ECSWorld(): _systems(), _systemCount(0),_activeEntities(), _inactiveEntities(), _entityCount(0)
 {
     
 }

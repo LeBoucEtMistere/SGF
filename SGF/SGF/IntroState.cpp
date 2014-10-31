@@ -8,7 +8,7 @@
 
 #include "IntroState.h"
 
-IntroState::IntroState(sgf::StateManager& stateMng, int width, int height): sgf::IState(stateMng), _texLoader("TextureLoader_IntroState"), _spriteLoader("SpriteLoader_IntroState"), _musicLoader("MusicLoader_IntroState"), _width(width), _height(height), music(nullptr), jouer(), quitter(), reglages(), world()
+IntroState::IntroState(sgf::StateManager& stateMng, int width, int height): sgf::IState(stateMng), _texLoader("TextureLoader_IntroState"), _spriteLoader("SpriteLoader_IntroState"), _musicLoader("MusicLoader_IntroState"), music(nullptr), jouer(), quitter(), reglages(), world(), _width(width), _height(height)
 {
 
 

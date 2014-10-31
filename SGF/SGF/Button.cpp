@@ -9,13 +9,13 @@
 #include "Button.h"
 
 
-sgf::gui::Button::Button() : BoxFrame(0,0,0,0,""),  _idleSprite(nullptr), _clickedSprite(nullptr), _disabledSprite(nullptr), _currentSprite(nullptr), _state(sgf::gui::ButtonState::Idle)
+sgf::gui::Button::Button() : BoxFrame(0,0,0,0,""), _state(sgf::gui::ButtonState::Idle), _idleSprite(nullptr), _clickedSprite(nullptr), _disabledSprite(nullptr), _currentSprite(nullptr)
 {
 }
-sgf::gui::Button::Button(float originX, float originY, float width, float height, std::string const& ID) : BoxFrame(originX,originY,width,height,ID), _idleSprite(nullptr), _clickedSprite(nullptr), _disabledSprite(nullptr), _currentSprite(nullptr), _state(sgf::gui::ButtonState::Idle)
+sgf::gui::Button::Button(float originX, float originY, float width, float height, std::string const& ID) : BoxFrame(originX,originY,width,height,ID), _state(sgf::gui::ButtonState::Idle), _idleSprite(nullptr), _clickedSprite(nullptr), _disabledSprite(nullptr), _currentSprite(nullptr)
 {
 }
-sgf::gui::Button::Button(sf::Vector2f const& origin, float width, float height, std::string const& ID) : BoxFrame(origin.x,origin.y,width,height,ID), _idleSprite(nullptr), _clickedSprite(nullptr), _disabledSprite(nullptr), _currentSprite(nullptr), _state(sgf::gui::ButtonState::Idle)
+sgf::gui::Button::Button(sf::Vector2f const& origin, float width, float height, std::string const& ID) : BoxFrame(origin.x,origin.y,width,height,ID), _state(sgf::gui::ButtonState::Idle), _idleSprite(nullptr), _clickedSprite(nullptr), _disabledSprite(nullptr), _currentSprite(nullptr)
 {
 }
 

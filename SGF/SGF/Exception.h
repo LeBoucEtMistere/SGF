@@ -160,7 +160,7 @@ namespace sgf
                         std::string const& ressourceID= "",
                         std::string const& info="No more informations.",
                         sgf::ExceptionLevel level=ExceptionLevel::WARNING)throw()
-        : sgf::Exception(info, level, ExceptionType::LOADER), mLoaderName(loaderName), mRessourceID(ressourceID)
+        : sgf::Exception(info, level, ExceptionType::LOADER), mRessourceID(ressourceID), mLoaderName(loaderName)
         {
             std::string levelString = lvlToString(_level);
             std::string typeString = typeToString(_type);

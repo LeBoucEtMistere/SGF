@@ -8,7 +8,7 @@
 
 #include "ECSManager.h"
 
-sgf::ECSManager::ECSManager(): _activeEntities(), _inactiveEntities(), _entityCount(0), _systems(), _systemCount(0)
+sgf::ECSManager::ECSManager():  _systems(), _systemCount(0), _activeEntities(), _inactiveEntities(), _entityCount(0)
 {
     
 }

@@ -19,8 +19,8 @@ namespace sgf
         struct Box
         {
             
-            Box(float originX, float originY, float width, float height): x(originX), y(originY), width(width), height(height) {}
-            Box(sf::Vector2f const& origin, float width, float height): x(origin.x), y(origin.y), width(width), height(height) {}
+            Box(float originX, float originY, float givenwidth, float givenheight): x(originX), y(originY), width(givenwidth), height(givenheight) {}
+            Box(sf::Vector2f const& origin, float givenwidth, float givenheight): x(origin.x), y(origin.y), width(givenwidth), height(givenheight) {}
             float x;
             float y;
             float width;
