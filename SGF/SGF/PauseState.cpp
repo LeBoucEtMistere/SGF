@@ -65,7 +65,6 @@ void PauseState::HandleEvents(sgf::Game *,sf::RenderWindow& window, sf::Event co
 }
 void PauseState::Update(sgf::Game* game, sf::Time const& elapsed)
 {
-    
 }
 void PauseState::Draw(sgf::Game *,sf::RenderWindow& window)
 {

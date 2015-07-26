@@ -13,6 +13,7 @@
 #include "MyComponents.h"
 #include <SFML/Graphics.hpp>
 #include "Logger.h"
+#include <utility>
 //inheritance approach
 
 /*
@@ -54,25 +55,34 @@ public:
 
 struct MovementPolicy
 {
-    static void computeEntity(sgf::System<MovementPolicy, PositionComponent>::EntityWrapper& wrapper)
+    static void computeEntity(sgf::System<MovementPolicy, PositionComponent>::EntityWrapper& wrapper,sf::Time const& elapsed)
     {
         auto comp = wrapper->getComponent<PositionComponent>("pos");
-        comp.setData(comp.getData().x+1,comp.getData().y+1);
-        LOG("blob");
+        comp.setData(comp.getData().x+0.5*elapsed.asSeconds(),comp.getData().y+0.5*elapsed.asSeconds());
     }
 };
 
 
-
+struct DrawPolicy
+{
+    static void computeEntity(sgf::System<DrawPolicy, PositionComponent, GraphicComponent>::EntityWrapper& wrapper,sf::Time const& elapsed)
+    {
+        auto comp = wrapper->getComponent<GraphicComponent>("graph");
+        
+    }
+};
 
 struct OtherPolicy
 {
-    static void computeEntity(sgf::System<OtherPolicy, PositionComponent, HealthComponent>::EntityWrapper& wrapper) {}
+    static void computeEntity(sgf::System<OtherPolicy, PositionComponent, HealthComponent>::EntityWrapper& wrapper,sf::Time const& elapsed) {}
 };
 
 typedef sgf::System<MovementPolicy, PositionComponent> MovementSystem;
 
 typedef sgf::System<OtherPolicy, PositionComponent, HealthComponent> MySystem;
+
+typedef sgf::System<DrawPolicy, PositionComponent, GraphicComponent> DrawSystem;
+
 
 
 

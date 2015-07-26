@@ -48,16 +48,10 @@ namespace sgf
         void unactiveEntity(indexType const& ID);
         bool isActivated(indexType const& ID) const;
     private:
-        ECSWorld& _world;
+        sgf::ECSWorld& _world;
         
         
     };
-    
-
-    
-    
-    
-    
     
     
     class EntityWrapper;
@@ -69,7 +63,9 @@ namespace sgf
         ISystem(sgf::ECSWorld& world) : _world(world)
         {}
         virtual ~ISystem() = default;
-        virtual void run() = 0;
+        virtual void run(sf::Time const& elapsed) = 0;
+        virtual void registerEntity(sgf::Entity &entity) = 0;
+        virtual bool isWatchable(sgf::Entity &entity) =0;
     protected:
         sgf::ECSIWorld _world;
     };
@@ -126,17 +122,16 @@ namespace sgf
         
         // end of nested class //
         
-        virtual void run()
+        virtual void run(sf::Time const& elapsed) override
         {
             for (auto &i : _watchedEntity)
             {
-                LOG("da");
                 EntityWrapper wrapper(this, i.second);
-                Policy::computeEntity(wrapper);
+                Policy::computeEntity(wrapper,std::forward<sf::Time const&>(elapsed));
             }
         }
         
-        static bool isWatchable(sgf::Entity &entity)
+        virtual bool isWatchable(sgf::Entity &entity)
         {
             for (auto &i : _typeWatched)
             {
@@ -149,7 +144,7 @@ namespace sgf
             return true;
         }
         
-        void registerEntity(Entity & entity)
+        void registerEntity(Entity & entity) override
         {
             if (!isWatchable(entity)) throw sgf::Exception("excp");
             
@@ -160,7 +155,6 @@ namespace sgf
             
             _watchedEntity.insert({hash, entity});
         }
-        
     
         
     protected:

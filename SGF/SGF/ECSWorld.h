@@ -54,7 +54,9 @@ namespace sgf
         template <typename SystemType>
         bool isSystemExisting() const;
         
-        void runSystems();
+        void addEntityToSystem(std::unique_ptr<sgf::ISystem>& sys, std::unique_ptr<sgf::Entity>& entity);
+        
+        void runSystems(sf::Time const& elapsed);
         
         void removeAllSystems();
     
@@ -97,8 +99,22 @@ namespace sgf
         if(isSystemExisting<SystemType>()) throw sgf::Exception("excp");
 
         // l'ajouter à la liste de systems
-        _systems.emplace(std::make_pair(std::type_index(typeid(SystemType)).hash_code(), std::unique_ptr<sgf::ISystem>(new SystemType(*this)) ));
+        auto ret = _systems.emplace(std::make_pair(std::type_index(typeid(SystemType)).hash_code(), std::unique_ptr<sgf::ISystem>(new SystemType(*this)) ));
+        if (!ret.second) throw sgf::Exception("excp");
+        
         ++_systemCount;
+        
+        
+        
+        //lui enregistrer les entités qui existent déjà dans le world et sur lequelles il a autorité
+        for (auto it = _activeEntities.begin(); it != _activeEntities.end(); ++it)
+        {
+            addEntityToSystem(ret.first->second,it->second);
+        }
+        
+        //plus clair ? (probleme de constness)
+        //std::for_each(_activeEntities.begin(),_activeEntities.end(),std::bind(addEntityToSystem(ret.first->second,std::placeholders::_1)));
+        
     }
     
     template <typename SystemType>

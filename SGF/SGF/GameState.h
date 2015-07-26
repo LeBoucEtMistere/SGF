@@ -12,6 +12,8 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 #include "PauseState.h"
+#include "Logger.h"
+
 
 class MyGame;
 

@@ -43,9 +43,9 @@ namespace sgf
     
     protected:
         
-        void PushState(std::unique_ptr<sgf::IState>&& state);    //DEFINED IN STATEMANAGER.CPP
-        void ReplaceState(std::unique_ptr<sgf::IState>&& state); //DEFINED IN STATEMANAGER.CPP
-        void PopState();                                         //DEFINED IN STATEMANAGER.CPP
+        void PushState(std::unique_ptr<sgf::IState>&& state);    
+        void ReplaceState(std::unique_ptr<sgf::IState>&& state);
+        void PopState();
         StateManager& _stateMng;
 
     

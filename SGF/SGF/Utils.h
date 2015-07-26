@@ -75,6 +75,16 @@ namespace sgf
     {
         return std::chrono::nanoseconds(time.asMicroseconds()*1000);
     }
+    
+    template < class IT, class PRED, class ACT >
+    inline ACT for_each_if( IT begin, IT end, PRED Pred, ACT Act )
+    {
+        
+        for( ; begin != end ; ++begin )
+            if( Pred( *begin ) )
+                Act( *begin ); 
+        return Act; 
+    }
 }
 
 #endif

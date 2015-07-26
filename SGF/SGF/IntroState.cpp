@@ -81,23 +81,17 @@ void IntroState::Init()
     quitter.setClickedSprite(_spriteLoader.getRessource("gui_button_quitter_clicked" ));
     quitter.centerAt(_width/2, (_height/7)*5);
     
-    for (int i = 0; i < 10; ++i)
+    
+    
+    for (unsigned int i = 0; i < 10; ++i)
     {
         std::unique_ptr<sgf::Entity> entity(new sgf::Entity(i));
         entity->addComponent<PositionComponent>("pos", i, 3.0*i);
-        if (entity->hasComponentType<PositionComponent>()) {
-            LOG("true");
-        }
-        if (entity->hasComponent<PositionComponent>("pos")) {
-            LOG("also true");
-        }
+
         auto data = entity->getComponent<PositionComponent>("pos").getData();
         std::string str ("entity n" + std::to_string(i) + " : x=" + std::to_string(data.x) + " y=" + std::to_string(data.y));
         LOG(str.c_str());
-        entity->setComponent<PositionComponent>("pos", i,4.0*i);
-        data = entity->getComponent<PositionComponent>("pos").getData();
-        std::string str2 ("entity n" + std::to_string(i) + " : x=" + std::to_string(data.x) + " y=" + std::to_string(data.y));
-        LOG(str2.c_str());
+
         
         entity->addComponent<PositionComponent>("position", i,i);
         entity->inactiveComponent("position");
@@ -185,7 +179,7 @@ void IntroState::HandleEvents(sgf::Game *,sf::RenderWindow& window, sf::Event co
 }
 void IntroState::Update(sgf::Game* game, sf::Time const& elapsed)
 {
-    world.runSystems();
+    world.runSystems(std::forward<sf::Time const&>(elapsed));
 }
 void IntroState::Draw(sgf::Game *,sf::RenderWindow& window)
 {

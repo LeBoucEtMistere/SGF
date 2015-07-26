@@ -65,7 +65,6 @@ void GameState::HandleEvents(sgf::Game *,sf::RenderWindow& window, sf::Event con
 }
 void GameState::Update(sgf::Game* game, sf::Time const& elapsed)
 {
-    
 }
 void GameState::Draw(sgf::Game *,sf::RenderWindow& window)
 {

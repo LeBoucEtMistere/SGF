@@ -25,15 +25,19 @@ void sgf::ECSWorld::removeAllSystems()
     _systemCount = 0;
 }
 
-void sgf::ECSWorld::runSystems()
+void sgf::ECSWorld::runSystems(sf::Time const& elapsed)
 {
     for (auto &i : _systems)
     {
-        i.second->run();
-        LOG("dah")
+        i.second->run(std::forward<sf::Time const&>(elapsed));
     }
 }
 
+void sgf::ECSWorld::addEntityToSystem(std::unique_ptr<sgf::ISystem>& sys, std::unique_ptr<sgf::Entity>& entity)
+{
+    if( sys->isWatchable(*entity))
+        sys->registerEntity(*entity);
+}
 
 ////////////////////////////////////////////////////
 ///////////////////// ENTITIES  ////////////////////
@@ -50,11 +54,15 @@ void sgf::ECSWorld::registerEntity(std::unique_ptr<sgf::Entity>& entity)
     
     //en prendre l'ownership
     //l'ajouter au vecteur d'entité actives
-    _activeEntities.emplace(std::make_pair(entity->getId(),std::move(entity)));
+    auto ret = _activeEntities.emplace(std::make_pair(entity->getId(),std::move(entity)));
     
     //l'ajouter au(x) système(s) compétents
     
-    //TODO
+    for (auto it = _systems.begin(); it != _systems.end(); ++it)
+    {
+        if (it->second->isWatchable(*(ret.first->second)))
+            it->second->registerEntity(*(ret.first->second));
+    }
     
     ++_entityCount;
 }
