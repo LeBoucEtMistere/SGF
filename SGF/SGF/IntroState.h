@@ -67,7 +67,7 @@ private:
     sgf::World world;
     
     sf::RenderWindow &_window;
-    RenderSystem _renderSystem;
+    std::vector< std::unique_ptr<sgf::ISystem> > _systems;
     
     int _width;
     int _height;

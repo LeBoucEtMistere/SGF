@@ -7,8 +7,9 @@
 //
 
 #include "IntroState.h"
+#include "Utils.h"
 
-IntroState::IntroState(sgf::StateManager& stateMng, int width, int height, sf::RenderWindow &window): sgf::IState(stateMng), _texLoader("TextureLoader_IntroState"), _spriteLoader("SpriteLoader_IntroState"), _musicLoader("MusicLoader_IntroState"), music(nullptr), jouer(), quitter(), reglages(), world(), _width(width), _height(height), _window(window), _renderSystem(world, _window)
+IntroState::IntroState(sgf::StateManager& stateMng, int width, int height, sf::RenderWindow &window): sgf::IState(stateMng), _texLoader("TextureLoader_IntroState"), _spriteLoader("SpriteLoader_IntroState"), _musicLoader("MusicLoader_IntroState"), music(nullptr), jouer(), quitter(), reglages(), world(), _width(width), _height(height), _window(window), _systems()
 {
 
 
@@ -101,7 +102,7 @@ void IntroState::Init()
         world.registerEntity(entity);
     }*/
     
-    std::unique_ptr<sgf::Entity> entity(new sgf::Entity(12));
+    std::unique_ptr<sgf::Entity> entity(sgf::make_unique<sgf::Entity>(12));
     entity->addComponent<PositionComponent>("pos", 200,200);
     auto circle=sf::CircleShape(150);
     circle.setPosition(200, 200);
@@ -110,7 +111,14 @@ void IntroState::Init()
     
     world.registerEntity(entity);
     
-    world.addSystem(_renderSystem);
+    auto render=sgf::make_unique<RenderSystem>(world,_window);
+    world.addSystem(*render);
+    auto mov=sgf::make_unique<MovementSystem>(world);
+    world.addSystem(*mov);
+    
+    _systems.push_back(std::move(render));
+    _systems.push_back(std::move(mov));
+
     
     music->play();
     

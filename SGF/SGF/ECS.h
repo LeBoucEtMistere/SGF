@@ -11,8 +11,7 @@
 
 #include "Component.h"
 #include "Entity.h"
-#include "SystemBis.h"
-#include "ECSWorld.h"
+#include "System.h"
 #include "World.h"
 
 

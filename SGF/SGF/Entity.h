@@ -57,7 +57,7 @@ namespace sgf
         ///// GET /////
         
         template<class T>
-        T const& getComponent(std::string const& ID) const;
+        T & getComponent(std::string const& ID) const;
         
         ///// SET /////
         
@@ -137,7 +137,7 @@ namespace sgf
     ///// GET /////
     
     template <class T>
-    T const& sgf::Entity::getComponent(std::string const& ID) const
+    T & sgf::Entity::getComponent(std::string const& ID) const
     {
         std::type_index index (typeid(T));
         auto it = std::find_if(_activeComponents.begin(),

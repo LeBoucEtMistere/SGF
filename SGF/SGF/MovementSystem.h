@@ -89,16 +89,17 @@ typedef sgf::System<DrawPolicy, PositionComponent, GraphicComponent> DrawSystem;
 class MovementSystem : public sgf::System<PositionComponent>
 {
 public:
-    MovementSystem(sgf::World &world): sgf::System<PositionComponent>(world), speed(0.5)
+    MovementSystem(sgf::World &world): sgf::System<PositionComponent>(world), speed(100)
     {}
     void run(sf::Time const& elapsed) override
     {
     auto time=elapsed.asSeconds();
         for(auto it=_watchedEntity.begin(); it!=_watchedEntity.end(); it++)
         {
-            auto data= it->second.getComponent<PositionComponent>("pos").getData();
-            it->second.setComponent<PositionComponent>("pos", sf::Vector2f(data.x+time*speed,data.y+time*speed));
+            auto &data= it->second.getComponent<PositionComponent>("pos")._data;
             
+            data.x+=time*speed;
+            data.y+=time*speed;
             
         }
     }
@@ -115,14 +116,13 @@ public:
     void run(sf::Time const& elapsed) override
     {
         auto time=elapsed.asSeconds();
+    
         for(auto it=_watchedEntity.begin(); it!=_watchedEntity.end(); it++)
         {
-            auto pos= it->second.getComponent<PositionComponent>("pos").getData();
+            auto pos= it->second.getComponent<PositionComponent>("pos")._data;
 
-            auto &shape =it->second.getComponent<CircleShapeComponent>("graph").getData();
-            auto copy=shape;;
-            copy.setPosition(pos.x, pos.y);
-            //it->second.setComponent<CircleShapeComponent>("graph", copy);
+            auto &shape =it->second.getComponent<CircleShapeComponent>("graph")._data;
+            shape.setPosition(pos.x, pos.y);
             
             _window.draw(shape);
         }

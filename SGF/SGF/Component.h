@@ -39,9 +39,9 @@ namespace sgf
     };
     
     template <class DataType>
-    class Component : public sgf::IComponent
+    struct Component : public sgf::IComponent
     {
-    public:
+    
         template<class ... Args>
         Component(std::string const& ID, Args&&... args) : sgf::IComponent(ID), _data(std::forward<Args>(args)...)
         {}
@@ -49,7 +49,7 @@ namespace sgf
         virtual ~Component() = default;
         Component (Component const& rhs) = default;
         Component& operator=(Component const& rhs) = default;
-        
+        /*
         DataType const& getData()const
         {
             return _data;
@@ -58,9 +58,9 @@ namespace sgf
         void setData(Args&& ...args)
         {
             _data = DataType(std::forward<Args>(args)...);
-        }
+        }*/
         
-    protected:
+    
         
         DataType _data;
     };

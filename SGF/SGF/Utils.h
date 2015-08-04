@@ -76,14 +76,10 @@ namespace sgf
         return std::chrono::nanoseconds(time.asMicroseconds()*1000);
     }
     
-    template < class IT, class PRED, class ACT >
-    inline ACT for_each_if( IT begin, IT end, PRED Pred, ACT Act )
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique(Args&&... args)
     {
-        
-        for( ; begin != end ; ++begin )
-            if( Pred( *begin ) )
-                Act( *begin ); 
-        return Act; 
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 }
 

@@ -10,7 +10,7 @@
 #define __SGF__World__
 
 #include "Entity.h"
-#include "SystemBis.h"
+#include "System.h"
 #include <unordered_map>
 #include <typeindex>
 
@@ -137,9 +137,8 @@ namespace sgf
                                { return elem.first == index;}
                                );
         if ( it != _systems.end())
-        {
-            return true;
-        }
+        return true;
+        
         else return false;
         
     }
