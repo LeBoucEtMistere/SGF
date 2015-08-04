@@ -1,13 +1,13 @@
 //
-//  ECSWorld.h
+//  World.h
 //  SGF
 //
 //  Created by DEPASSE Arthur on 14/07/2014.
 //  Copyright (c) 2014 DEPASSE Arthur. All rights reserved.
 //
 
-#ifndef __SGF__ECSWorld__
-#define __SGF__ECSWorld__
+#ifndef __SGF__World__
+#define __SGF__World__
 
 #include "Entity.h"
 #include "SystemBis.h"
@@ -17,25 +17,25 @@
 namespace sgf
 {
     class ISystem;
-    class ECSIWorld;
+    class IWorld;
     
-    class ECSWorld
+    class World
     {
     public:
         
         friend class ISystem;
-        friend class ECSIWorld;
+        friend class IWorld;
         
         typedef unsigned int indexType ;
         
-        ECSWorld();
+        World();
         
-        ECSWorld(const ECSWorld& rhs) = delete;
-        ECSWorld(ECSWorld&& rhs) = delete;
-        ECSWorld& operator=(const ECSWorld&) = delete;
-        ECSWorld& operator=(ECSWorld&&) = delete;
+        World(const World& rhs) = delete;
+        World(World&& rhs) = delete;
+        World& operator=(const World&) = delete;
+        World& operator=(World&&) = delete;
         
-        ~ECSWorld()
+        ~World()
         {
             removeAllSystems();
             removeAllEntities();
@@ -46,7 +46,7 @@ namespace sgf
         ////////////////////////////////////////////////////
         
         template <typename SystemType>
-        void addSystem();
+        void addSystem(SystemType& system);
         
         template <typename SystemType>
         void removeSystem();
@@ -54,21 +54,21 @@ namespace sgf
         template <typename SystemType>
         bool isSystemExisting() const;
         
-        void addEntityToSystem(std::unique_ptr<sgf::ISystem>& sys, std::unique_ptr<sgf::Entity>& entity);
+        void addEntityToSystem(sgf::ISystem& sys, std::unique_ptr<sgf::Entity>& entity);
         
         void runSystems(sf::Time const& elapsed);
         
         void removeAllSystems();
-    
+        
         ////////////////////////////////////////////////////
         ///////////////////// ENTITIES  ////////////////////
         ////////////////////////////////////////////////////
-    
+        
     public:
         
         void registerEntity(std::unique_ptr<sgf::Entity>& entity); //will take the ownership of the entity
         std::size_t getEntityCount() const;
-
+        
         
     private:
         
@@ -81,7 +81,7 @@ namespace sgf
         
     private:
         
-        std::unordered_map<size_t, std::unique_ptr<sgf::ISystem> > _systems; //size_t represent the hash of the type_index
+        std::unordered_map<size_t, ISystem&> _systems; //size_t represent the hash of the type_index
         std::size_t _systemCount;
         
         std::unordered_map<indexType, std::unique_ptr<sgf::Entity> > _activeEntities;
@@ -92,15 +92,15 @@ namespace sgf
     };
     
     template <typename SystemType>
-    void sgf::ECSWorld::addSystem()
+    void sgf::World::addSystem(SystemType &system)
     {
         //créer un system du type spécifié (après avoir vérifié que le type dérive bien de sgf::System et qu'il n'y a pas déjà un system de ce type)
         static_assert(std::is_base_of<sgf::ISystem, SystemType>::value, "Trying to register a system that do not derive from sgf::ISystem");
         if(isSystemExisting<SystemType>()) throw sgf::Exception("System Type already registered");
-
+        
         // l'ajouter à la liste de systems
-        auto ret = _systems.emplace(std::make_pair(std::type_index(typeid(SystemType)).hash_code(), std::unique_ptr<sgf::ISystem>(new SystemType(*this)) ));
-        if (!ret.second) throw sgf::Exception("excp");
+        auto ret = _systems.insert({std::type_index(typeid(SystemType)).hash_code(), system});
+        if (!ret.second) throw sgf::Exception("Cannot register system");
         
         ++_systemCount;
         
@@ -118,22 +118,22 @@ namespace sgf
     }
     
     template <typename SystemType>
-    void sgf::ECSWorld::removeSystem()
+    void sgf::World::removeSystem()
     {
         // retirer le system de ce type
-        if (!isSystemExisting<SystemType>()) throw sgf::Exception("excp");
+        if (!isSystemExisting<SystemType>()) throw sgf::Exception("System Type doesn't exist and cannot be erased");
         size_t index (std::type_index(typeid(SystemType)).hash_code());
         _systems.erase(_systems.find(index));
         --_systemCount;
     }
     
     template <typename SystemType>
-    bool sgf::ECSWorld::isSystemExisting() const
+    bool sgf::World::isSystemExisting() const
     {
         size_t index (std::type_index(typeid(SystemType)).hash_code());
         auto it = std::find_if(_systems.begin(),
                                _systems.end(),
-                               [&index](const std::unordered_map<size_t, std::unique_ptr<sgf::ISystem> >::value_type &elem) -> bool
+                               [&index](const std::unordered_map<size_t, sgf::ISystem& >::value_type &elem) -> bool
                                { return elem.first == index;}
                                );
         if ( it != _systems.end())
@@ -141,14 +141,14 @@ namespace sgf
             return true;
         }
         else return false;
-
+        
     }
     
-
     
-
+    
+    
 }
 
 
 
-#endif /* defined(__SGF__ECSWorld__) */
+#endif /* defined(__SGF__World__) */

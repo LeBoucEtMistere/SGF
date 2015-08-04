@@ -33,7 +33,7 @@ class IntroState: public sgf::IState
 {
 public:
     
-    IntroState(sgf::StateManager& stateMng, int width, int height);
+    IntroState(sgf::StateManager& stateMng, int width, int height, sf::RenderWindow &window);
     virtual ~IntroState(){}
     
     virtual void Init();
@@ -64,8 +64,10 @@ private:
     sgf::gui::Button quitter;
     sgf::gui::Button reglages;
     
-    sgf::ECSWorld world;
+    sgf::World world;
     
+    sf::RenderWindow &_window;
+    RenderSystem _renderSystem;
     
     int _width;
     int _height;

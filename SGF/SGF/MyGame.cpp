@@ -12,7 +12,7 @@ MyGame::MyGame(const std::string& title, int width, int height, unsigned int sty
                 sgf::Game(title, width, height, style), _width(width), _height(height)
 
 {
-    _stateManager.PushState(std::unique_ptr<IntroState>(new IntroState (_stateManager, _width, _height)));
+    _stateManager.PushState(std::unique_ptr<IntroState>(new IntroState (_stateManager, _width, _height, getWindow())));
 }
 
 MyGame::~MyGame()

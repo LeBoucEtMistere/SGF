@@ -39,7 +39,7 @@ namespace sgf
     
         virtual void HandleEvents(sgf::Game *,sf::RenderWindow& window, sf::Event const& evt) = 0;
         virtual void Update(sgf::Game* game, sf::Time const& elapsed) = 0;
-        virtual void Draw(sgf::Game *,sf::RenderWindow& window) = 0;
+        virtual void Draw(sgf::Game *game,sf::RenderWindow& window) = 0;
     
     protected:
         

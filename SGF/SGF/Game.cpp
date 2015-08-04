@@ -17,6 +17,11 @@ sgf::Game::~Game()
 {
 }
 
+sf::RenderWindow& sgf::Game::getWindow()
+{
+    return _window;
+}
+
 void sgf::Game::exec()
 {
     init();
@@ -35,9 +40,9 @@ void sgf::Game::exec()
             _stateManager.HandleEvents(this,_window, event);
         }
         
-        _stateManager.Update(this, clock.restart());
-        
         _window.clear();
+        
+        _stateManager.Update(this, clock.restart());
         
         _stateManager.Draw(this, _window);
         

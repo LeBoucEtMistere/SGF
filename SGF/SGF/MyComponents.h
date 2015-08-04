@@ -16,7 +16,7 @@
 using HealthComponent  = sgf::Component<unsigned int>;
 using RangeComponent = sgf::Component<unsigned int>;
 using PositionComponent = sgf::Component<sf::Vector2f>;
-using GraphicComponent = sgf::Component<sf::Drawable>;
+using CircleShapeComponent = sgf::Component<sf::CircleShape>;
 
 
 #endif

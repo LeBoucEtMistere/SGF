@@ -5,7 +5,7 @@
 //  Created by DEPASSE Arthur on 28/12/2013.
 //  Copyright (c) 2013 DEPASSE Arthur. All rights reserved.
 //
-
+/*
 #include "System.h"
 #include "ECSWorld.h"
 
@@ -39,6 +39,6 @@ bool sgf::ECSIWorld::isActivated(indexType const& ID) const
 }
 
 
-
+*/
 
 

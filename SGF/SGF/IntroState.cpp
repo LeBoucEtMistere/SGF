@@ -8,7 +8,7 @@
 
 #include "IntroState.h"
 
-IntroState::IntroState(sgf::StateManager& stateMng, int width, int height): sgf::IState(stateMng), _texLoader("TextureLoader_IntroState"), _spriteLoader("SpriteLoader_IntroState"), _musicLoader("MusicLoader_IntroState"), music(nullptr), jouer(), quitter(), reglages(), world(), _width(width), _height(height)
+IntroState::IntroState(sgf::StateManager& stateMng, int width, int height, sf::RenderWindow &window): sgf::IState(stateMng), _texLoader("TextureLoader_IntroState"), _spriteLoader("SpriteLoader_IntroState"), _musicLoader("MusicLoader_IntroState"), music(nullptr), jouer(), quitter(), reglages(), world(), _width(width), _height(height), _window(window), _renderSystem(world, _window)
 {
 
 
@@ -82,7 +82,7 @@ void IntroState::Init()
     quitter.centerAt(_width/2, (_height/7)*5);
     
     
-    
+    /*
     for (unsigned int i = 0; i < 10; ++i)
     {
         std::unique_ptr<sgf::Entity> entity(new sgf::Entity(i));
@@ -99,14 +99,18 @@ void IntroState::Init()
         entity->deleteComponent("position");
         
         world.registerEntity(entity);
-    }
- 
-    world.addSystem<MovementSystem>();
-    if(world.isSystemExisting<MovementSystem>()) LOG("system MovementSystem created");
+    }*/
     
+    std::unique_ptr<sgf::Entity> entity(new sgf::Entity(12));
+    entity->addComponent<PositionComponent>("pos", 200,200);
+    auto circle=sf::CircleShape(150);
+    circle.setPosition(200, 200);
+    circle.setFillColor(sf::Color::Red);
+    entity->addComponent<CircleShapeComponent>("graph", circle);
     
-    world.addSystem<MySystem>();
-    if(world.isSystemExisting<MySystem>()) LOG("system MySystem created");
+    world.registerEntity(entity);
+    
+    world.addSystem(_renderSystem);
     
     music->play();
     
@@ -183,11 +187,12 @@ void IntroState::Update(sgf::Game* game, sf::Time const& elapsed)
 }
 void IntroState::Draw(sgf::Game *,sf::RenderWindow& window)
 {
-    window.draw(_spriteLoader.getRessource("bckg_image" ));
+    //window.draw(_spriteLoader.getRessource("bckg_image" ));
     window.draw(jouer.getCurrentSprite());
     window.draw(reglages.getCurrentSprite());
     window.draw(quitter.getCurrentSprite());
     window.draw(_spriteLoader.getRessource("gui_title" ));
+  
 }
 
 
